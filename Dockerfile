@@ -1,30 +1,24 @@
-FROM alpine:3.6
+FROM centos:latest
+MAINTAINER Robin Price <robin@docker.com>
 
-RUN set -ex \
-    && echo "http://nl.alpinelinux.org/alpine/edge/main" >> /etc/apk/repositories \
-    && apk update \
-    && apk add --no-cache \
+RUN yum update -y && yum install -y \
     tcpdump \
     bridge-utils \
-    netcat-openbsd \
     util-linux \
     iptables \
     iputils \
-    iproute2 \
-    iftop \
-    drill \
-    apache2-utils \
+    iproute \
+    bind-utils \
+    httpd-tools \
     strace \
     curl \
     ethtool \
     ipvsadm \
     ngrep \
-    iperf \
+    iperf3 \
     nmap \
     conntrack-tools \
     socat
-# apparmor issue #14140
-RUN mv /usr/sbin/tcpdump /usr/bin/tcpdump
 
 ADD netgen.sh /usr/local/bin/netgen
 
