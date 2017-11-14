@@ -27,7 +27,7 @@ Cool thing about namespaces is that you can switch between them. You can enter a
 
 To troubleshoot these issues, `netshoot` includes a set of powerful tools as recommended by this diagram. 
 
-![](http://www.brendangregg.com/Perf/linux_observability_tools.png)
+![linux-perf-tools.png](img/linux-perf-tools.png)
 
 
 **Included Packages:** The following packages are included in `netshoot`. We'll go over some with some sample use-cases.
@@ -56,7 +56,7 @@ Purpose : test networking performance between two containers/hosts.
 Create Overlay network:
 
 ```
-$docker network create -d overlay perf-test
+$ docker network create -d overlay perf-test
 ```
 Launch two containers:
 
@@ -184,6 +184,8 @@ ce4ff40a5456        nicolaka/netshoot:latest   "iperf -s -p 9999"       5 minute
 ```
 
 ![iftop.png](img/iftop.png)
+
+
 
 
 ## drill (Not installed by default)
