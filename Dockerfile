@@ -3,6 +3,7 @@ MAINTAINER Robin Price <robin@docker.com>
 
 RUN yum update -y && yum install -y \
     tcpdump \
+    net-tools \
     bridge-utils \
     util-linux \
     iptables \
