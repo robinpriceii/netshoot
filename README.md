@@ -1,6 +1,8 @@
 ## netshoot: a Docker network trouble-shooting swiss-army container
 # CentOS Edition
 
+**Thank you to @nicolaka for the original**
+
 **Purpose:** Docker network tshooting can be difficult for network engineers. With proper understanding of how Docker networking works and the right set of tools, you can troubleshoot and resolve these networking issues. The `netshoot` container has a set of powerful networking tshooting tools that can be used to troubleshoot Docker networking issues. 
 
 **Network Namespaces:** Before starting to use this tool, it's important to go over one key topic: **Network Namespaces**. Network namespaces provide isolation of the system resources associated with networking. Docker uses network and other type of namespaces (`pid`,`mount`,`user`..etc) to create an isolated environment for each container. Everything from interfaces, routes, and IPs is completely isolated within the network namespace of the container. 
