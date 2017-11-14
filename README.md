@@ -1,4 +1,5 @@
-## netshoot: a Docker network trouble-shooting swiss-army container using CentOS
+## netshoot: a Docker network trouble-shooting swiss-army container
+# CentOS Edition
 
 **Purpose:** Docker network tshooting can be difficult for network engineers. With proper understanding of how Docker networking works and the right set of tools, you can troubleshoot and resolve these networking issues. The `netshoot` container has a set of powerful networking tshooting tools that can be used to troubleshoot Docker networking issues. 
 
@@ -60,27 +61,25 @@ $docker network create -d overlay perf-test
 Launch two containers:
 
 ```
-🐳  → docker service create --name perf-test-a --network perf-test nicolaka/netshoot iperf -s -p 9999
+# docker service create --name perf-test-a --network perf-test nicolaka/netshoot iperf -s -p 9999
 7dkcckjs0g7b4eddv8e5ez9nv
 
 
-🐳  → docker service create --name perf-test-b --network perf-test nicolaka/netshoot iperf -c perf-test-a -p 9999
+# docker service create --name perf-test-b --network perf-test nicolaka/netshoot iperf -c perf-test-a -p 9999
 2yb6fxls5ezfnav2z93lua8xl
 
 
-
- 🐳  → docker service ls
+ # docker service ls
 ID            NAME         REPLICAS  IMAGE              COMMAND
 2yb6fxls5ezf  perf-test-b  1/1       nicolaka/netshoot  iperf -c perf-test-a -p 9999
 7dkcckjs0g7b  perf-test-a  1/1       nicolaka/netshoot  iperf -s -p 9999
 
 
-
-🐳  → docker ps
+# docker ps
 CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS              PORTS               NAMES
 ce4ff40a5456        nicolaka/netshoot:latest   "iperf -s -p 9999"       31 seconds ago      Up 30 seconds                           perf-test-a.1.bil2mo8inj3r9nyrss1g15qav
 
-🐳  → docker logs ce4ff40a5456
+# docker logs ce4ff40a5456
 ------------------------------------------------------------
 Server listening on TCP port 9999
 TCP window size: 85.3 KByte (default)
@@ -99,11 +98,11 @@ TCP window size: 85.3 KByte (default)
 ```
 # Continuing on the iperf example. Let's lauch netshoot with perf-test-a's container network namespace.
 
-🐳  → docker run -it --net container:perf-test-a.1.0qlf1kaka0cq38gojf7wcatoa  nicolaka/netshoot 
+# docker run -it --net container:perf-test-a.1.0qlf1kaka0cq38gojf7wcatoa  nicolaka/netshoot 
 
 # Capturing packets on eth0 and tcp port 9999.
 
-/ # tcpdump -i eth0 port 9999 -c 1 -Xvv
+# tcpdump -i eth0 port 9999 -c 1 -Xvv
 tcpdump: listening on eth0, link-type EN10MB (Ethernet), capture size 262144 bytes
 23:14:09.771825 IP (tos 0x0, ttl 64, id 60898, offset 0, flags [DF], proto TCP (6), length 64360)
     10.0.3.5.60032 > 0e2ccbf3d608.9999: Flags [.], cksum 0x1563 (incorrect -> 0x895d), seq 222376702:222441010, ack 3545090958, win 221, options [nop,nop,TS val 2488870 ecr 2488869], length 64308
@@ -139,9 +138,9 @@ Continuing on from `iperf` example. Let's use `netstat` to confirm that it's lis
 
 
 ```
-🐳  → docker run -it --net container:perf-test-a.1.0qlf1kaka0cq38gojf7wcatoa  nicolaka/netshoot 
+# docker run -it --net container:perf-test-a.1.0qlf1kaka0cq38gojf7wcatoa  nicolaka/netshoot 
 
-/ # netstat -tulpn
+# netstat -tulpn
 Active Internet connections (only servers)
 Proto Recv-Q Send-Q Local Address           Foreign Address         State       PID/Program name
 tcp        0      0 127.0.0.11:46727        0.0.0.0:*               LISTEN      -
@@ -153,7 +152,7 @@ udp        0      0 127.0.0.11:39552        0.0.0.0:*                           
 `nmap` ("Network Mapper") is an open source tool for network exploration and security auditing. It is very useful for scanning to see which ports are open between a given set of hosts. This is a common thing to check for when installing Swarm or UCP because a range of ports is required for cluster communication. The command analyzes the connection pathway between the host where `nmap` is running and the given target address.
 
 ```
-🐳  → docker run -it --privileged nicolaka/netshoot nmap -p 12376-12390 -dd 172.31.24.25
+# docker run -it --privileged nicolaka/netshoot nmap -p 12376-12390 -dd 172.31.24.25
 
 ...
 Discovered closed port 12388/tcp on 172.31.24.25
@@ -176,11 +175,11 @@ Purpose: iftop does for network usage what top does for CPU usage. It listens to
 Continuing the `iperf` example.
 
 ```
- → docker ps
+# docker ps
 CONTAINER ID        IMAGE                      COMMAND                  CREATED             STATUS              PORTS               NAMES
 ce4ff40a5456        nicolaka/netshoot:latest   "iperf -s -p 9999"       5 minutes ago       Up 5 minutes                            perf-test-a.1.bil2mo8inj3r9nyrss1g15qav
 
-🐳  → docker run -it --net container:perf-test-a.1.bil2mo8inj3r9nyrss1g15qav nicolaka/netshoot iftop -i eth0
+# docker run -it --net container:perf-test-a.1.bil2mo8inj3r9nyrss1g15qav nicolaka/netshoot iftop -i eth0
 
 ```
 
@@ -195,7 +194,7 @@ Continuing the `iperf` example, we'll use `drill` to understand how services' DN
 
 
 ```
-🐳  → docker run -it --net container:perf-test-a.1.bil2mo8inj3r9nyrss1g15qav nicolaka/netshoot drill -V 5 perf-test-b
+# docker run -it --net container:perf-test-a.1.bil2mo8inj3r9nyrss1g15qav nicolaka/netshoot drill -V 5 perf-test-b
 ;; ->>HEADER<<- opcode: QUERY, rcode: NOERROR, id: 0
 ;; flags: rd ; QUERY: 1, ANSWER: 0, AUTHORITY: 0, ADDITIONAL: 0
 ;; QUESTION SECTION:
@@ -233,16 +232,16 @@ perf-test-b.	600	IN	A	10.0.3.4 <<<<<<<<<<<<<<<<<<<<<<<<<< Service VIP
 Purpose: a simple Unix utility that reads and writes data across network connections, using the TCP or UDP protocol. It's useful for testing and troubleshooting TCP/UDP connections. If there's a firewall rule blocking certain ports, `netcat` can be used to detect
 
 ```
-🐳  →  docker network create -d overlay my-ovl
+#  docker network create -d overlay my-ovl
 55rohpeerwqx8og4n0byr0ehu
 
-🐳  → docker service create --name service-a --network my-ovl -p 8080:8080 nicolaka/netshoot nc -l 8080
+# docker service create --name service-a --network my-ovl -p 8080:8080 nicolaka/netshoot nc -l 8080
 bnj517hh4ylpf7ewawsp9unrc
 
-🐳  → docker service create --name service-b --network my-ovl nicolaka/netshoot nc -vz service-a 8080
+# docker service create --name service-b --network my-ovl nicolaka/netshoot nc -vz service-a 8080
 3xv1ukbd3kr03j4uybmmlp27j
 
-🐳  → docker logs service-b.1.0c5wy4104aosovtl1z9oixiso
+# docker logs service-b.1.0c5wy4104aosovtl1z9oixiso
 Connection to service-a 8080 port [tcp/http-alt] succeeded!
 
 ```
@@ -255,32 +254,32 @@ Connection to service-a 8080 port [tcp/http-alt] succeeded!
 Using `netgen` with `docker run`:
 
 ```
-🐳  →  docker network create -d bridge br
+#  docker network create -d bridge br
 01b167971453700cf0a40d7e1a0dc2b0021e024bbb119541cc8c1858343c9cfc
 
-🐳  →  docker run -d --rm --net br --name c1 nicolaka/netshoot netgen c2 5000
+#  docker run -d --rm --net br --name c1 nicolaka/netshoot netgen c2 5000
 8c51eb2100c35d14244dcecb80839c780999159985415a684258c7154ec6bd42
 
-🐳  →  docker run -it --rm --net br --name c2 nicolaka/netshoot netgen c1 5000
+#  docker run -it --rm --net br --name c2 nicolaka/netshoot netgen c1 5000
 Listener started on port 5000
 Sending traffic to c1 on port 5000 every 10 seconds
 Sent 1 messages to c1:5000
 Sent 2 messages to c1:5000
 
-🐳  →  sudo tcpdump -vvvn -i eth0 port 5000
+# sudo tcpdump -vvvn -i eth0 port 5000
 ...
 ```
 
 Using `netgen` with `docker services`:
 
 ```
-🐳  →  docker network create -d overlay ov
+# docker network create -d overlay ov
 01b167971453700cf0a40d7e1a0dc2b0021e024bbb119541cc8c1858343c9cfc
 
-🐳  →  docker service create --network ov --replicas 3 --name srvc netshoot netgen srvc 5000
+# docker service create --network ov --replicas 3 --name srvc netshoot netgen srvc 5000
 y93t8mb9wgzsc27f7l2rdu5io
 
-🐳  →  docker service logs srvc
+# docker service logs srvc
 srvc.1.vwklts5ybq5w@moby    | Listener started on port 5000
 srvc.1.vwklts5ybq5w@moby    | Sending traffic to srvc on port 5000 every 10 seconds
 srvc.1.vwklts5ybq5w@moby    | Sent 1 messages to srvc:5000
@@ -289,7 +288,7 @@ srvc.2.vu47gf0sdmje@moby    | Listener started on port 5000
 ...
 
 
-🐳  →  sudo tcpdump -vvvn -i eth0 port 5000
+$ sudo tcpdump -vvvn -i eth0 port 5000
 ...
 ```
 
@@ -301,9 +300,9 @@ purpose: a collection of utilities for controlling TCP / IP networking and traff
 ```
 # Sample routing and arp table of the docker host.
 
-🐳  → docker run -it --net host nicolaka/netshoot
+# docker run -it --net host nicolaka/netshoot
 
-/ # ip route show
+# ip route show
 default via 192.168.65.1 dev eth0  metric 204
 172.17.0.0/16 dev docker0  proto kernel  scope link  src 172.17.0.1
 172.19.0.0/16 dev br-fd694678f5c3  proto kernel  scope link  src 172.19.0.1 linkdown
@@ -313,7 +312,7 @@ default via 192.168.65.1 dev eth0  metric 204
 172.23.0.0/16 dev br-aafed4ec941f  proto kernel  scope link  src 172.23.0.1 linkdown
 192.168.65.0/29 dev eth0  proto kernel  scope link  src 192.168.65.2
 
-/ # ip neigh show
+# ip neigh show
 192.168.65.1 dev eth0 lladdr f6:16:36:bc:f9:c6 STALE
 172.17.0.7 dev docker0 lladdr 02:42:ac:11:00:07 STALE
 172.17.0.6 dev docker0 lladdr 02:42:ac:11:00:06 STALE
@@ -333,15 +332,15 @@ For example, if we wanted to check the L2 forwarding table for a overlay network
 
 ```
 # Creating an overlay network
-🐳  → docker network create -d overlay nsenter-test
+# docker network create -d overlay nsenter-test
 9tp0f348donsdj75pktssd97b
 
 # Launching a simple busybox service with 3 replicas
-🐳  → docker service create --name nsenter-l2-table-test --replicas 3 --network nsenter-test busybox ping localhost
+# docker service create --name nsenter-l2-table-test --replicas 3 --network nsenter-test busybox ping localhost
 3692i3q3u8nephdco2c10ro4c
 
 # Inspecting the service
-🐳  → docker network inspect nsenter-test
+# docker network inspect nsenter-test
 [
     {
         "Name": "nsenter-test",
@@ -391,11 +390,11 @@ For example, if we wanted to check the L2 forwarding table for a overlay network
 ]
 
 # Launcing netshoot in privileged mode
- 🐳  → docker run -it --rm -v /var/run/docker/netns:/var/run/docker/netns --privileged=true nicolaka/netshoot
+# docker run -it --rm -v /var/run/docker/netns:/var/run/docker/netns --privileged=true nicolaka/netshoot
  
 # Listing all docker-created network namespaces
  
- / # cd /var/run/docker/netns/
+# cd /var/run/docker/netns/
 /var/run/docker/netns # ls
 0b1b36d33313  1-9tp0f348do  14d1428c3962  645eb414b538  816b96054426  916dbaa7ea76  db9fd2d68a9b  e79049ce9994  f857b5c01ced
 1-9r17dodsxt  1159c401b8d8  1a508036acc8  7ca29d89293c  83b743f2f087  aeed676a57a5  default       f22ffa5115a0
@@ -403,11 +402,11 @@ For example, if we wanted to check the L2 forwarding table for a overlay network
 
 # The overlay network that we created had an id of 9tp0f348donsdj75pktssd97b. All overlay networks are named <number>-<id>. We can see it in the list as `1-9tp0f348do`. To enter it:
 
-/ # nsenter --net=/var/run/docker/netns/1-9tp0f348do sh
+# nsenter --net=/var/run/docker/netns/1-9tp0f348do sh
 
 # Now all the commands we issue are within that namespace. 
 
-/ # ifconfig
+# ifconfig
 br0       Link encap:Ethernet  HWaddr 02:15:B8:E7:DE:B3
           inet addr:10.0.1.1  Bcast:0.0.0.0  Mask:255.255.255.0
           inet6 addr: fe80::20ce:a5ff:fe63:437d%32621/64 Scope:Link
@@ -460,7 +459,7 @@ vxlan1    Link encap:Ethernet  HWaddr EA:EC:1D:B1:7D:D7
 
 # Let's check out the L2 forwarding table. These MAC addresses belong to the tasks/containers in this service. 
 
-/ # bridge  fdb show br br0
+# bridge  fdb show br br0
 33:33:00:00:00:01 dev br0 self permanent
 01:00:5e:00:00:01 dev br0 self permanent
 33:33:ff:63:43:7d dev br0 self permanent
@@ -481,13 +480,13 @@ ea:ec:1d:b1:7d:d7 dev vxlan1 master br0 permanent
 
 # ARP and routing tables. Note that an overlay network only routes traffic for that network. It only has a single route that matches the subnet of that network.
 
-/ # ip neigh show
-/ # ip route
+# ip neigh show
+# ip route
 10.0.1.0/24 dev br0  proto kernel  scope link  src 10.0.1.1
 
 # Looks like the arp table is flushed. Let's ping some of the containers on this network.
 
-/ # ping 10.0.1.4
+# ping 10.0.1.4
 PING 10.0.1.4 (10.0.1.4) 56(84) bytes of data.
 64 bytes from 10.0.1.4: icmp_seq=1 ttl=64 time=0.207 ms
 64 bytes from 10.0.1.4: icmp_seq=2 ttl=64 time=0.087 ms
@@ -496,12 +495,12 @@ PING 10.0.1.4 (10.0.1.4) 56(84) bytes of data.
 2 packets transmitted, 2 received, 0% packet loss, time 1002ms
 rtt min/avg/max/mdev = 0.087/0.147/0.207/0.060 ms
 
-/ # ip neigh show
+# ip neigh show
 10.0.1.4 dev br0 lladdr 02:42:0a:00:01:04 REACHABLE
 
 # and using bridge-utils to show interfaces of the overlay network local bridge.
 
-/ # brctl show
+# brctl show
 bridge name	bridge id		STP enabled	interfaces
 br0		8000.0215b8e7deb3	no		vxlan1
 							veth2
