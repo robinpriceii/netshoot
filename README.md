@@ -1,4 +1,4 @@
-## netshoot: a Docker network trouble-shooting swiss-army container
+## netshoot: a Docker network trouble-shooting swiss-army container using CentOS
 
 **Purpose:** Docker network tshooting can be difficult for network engineers. With proper understanding of how Docker networking works and the right set of tools, you can troubleshoot and resolve these networking issues. The `netshoot` container has a set of powerful networking tshooting tools that can be used to troubleshoot Docker networking issues. 
 
@@ -31,21 +31,21 @@ To troubleshoot these issues, `netshoot` includes a set of powerful tools as rec
 
 **Included Packages:** The following packages are included in `netshoot`. We'll go over some with some sample use-cases.
 
-  * iperf 
+  * iperf3 
   * tcpdump 	
-  * netstat
-  * iftop 
-  * drill
-  * netcat-openbsd 
-  * iproute2
+  * net-tools(netstat)
+  * iproute
   * util-linux(nsenter) 
   * bridge-utils 
+  * bind-utils
+  * httpd-tools
   * iputils 
   * curl
   * ethtool
   * nmap
-  * ipvs
-  * ngrep
+  * ipvsadm
+  * conntrack-tools
+  * socat
 
 
 ## iperf 
@@ -169,7 +169,7 @@ There are several states that ports will be discovered as:
 - `filtered`: the pathway to the port is closed, blocked by a firewall, routing rules, or host-based rules.
 
 
-## iftop
+## iftop (Install from EPEL)
 
 Purpose: iftop does for network usage what top does for CPU usage. It listens to network traffic on a named interface and displays a table of current bandwidth usage by pairs of hosts.
 
@@ -187,7 +187,7 @@ ce4ff40a5456        nicolaka/netshoot:latest   "iperf -s -p 9999"       5 minute
 ![iftop.png](img/iftop.png)
 
 
-## drill
+## drill (Not installed by default)
 
 Purpose: drill is a tool	to designed to get all sorts of information out of the DNS.
 
@@ -294,7 +294,7 @@ srvc.2.vu47gf0sdmje@moby    | Listener started on port 5000
 ```
 
 
-##  iproute2
+##  iproute
 
 purpose: a collection of utilities for controlling TCP / IP networking and traffic control in Linux.
 
@@ -320,7 +320,7 @@ default via 192.168.65.1 dev eth0  metric 204
 172.17.0.5 dev docker0 lladdr 02:42:ac:11:00:05 STALE
 ```
 
-More info on `iproute2` [here](http://lartc.org/howto/lartc.iproute2.tour.html)
+More info on `iproute` [here](http://lartc.org/howto/lartc.iproute2.tour.html)
 
 ## nsenter
 
