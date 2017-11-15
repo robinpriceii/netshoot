@@ -1,5 +1,4 @@
 FROM centos:latest
-MAINTAINER Robin Price <robin@docker.com>
 
 RUN yum update -y && yum install -y \
     tcpdump \
