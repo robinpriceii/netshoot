@@ -20,6 +20,4 @@ RUN yum update -y && yum install -y \
     conntrack-tools \
     socat
 
-ADD netgen.sh /usr/local/bin/netgen
-
 CMD ["sh"]
