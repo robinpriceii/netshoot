@@ -35,11 +35,11 @@ Cool thing about namespaces is that you can switch between them. You can enter a
 
 * **Container's Network Namespace:** If you're having networking issues with your application's container, you can launch `netshoot` with that container's network namespace like this :
 
-`$ docker run -it --net container:<container_name> nicolaka/netshoot`
+`$ docker run -it --net container:<container_name> rprice/netshoot`
 
 * **Host's Network Namespace:** If you think the networking issue is on the host itself, you can launch `netshoot` with that host's network namespace. This is how:
  
-`$ docker run -it --net host nicolaka/netshoot`
+`$ docker run -it --net host rprice/netshoot`
 
 * **Network's Network Namespace:** If you want to troubleshoot a Docker network, you can enter the network's namespace using `nsenter`. This is explained in the `nsenter` section below.
 
